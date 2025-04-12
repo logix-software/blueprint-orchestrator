@@ -61,12 +61,35 @@ NUXT_PUBLIC_API_URL=https://tuo-progetto.supabase.co
 ```bash
 # Esegui il frontend in modalità sviluppo
 npm run dev
-
-# In un altro terminale, avvia la Edge Function
-supabase functions serve analyzeSkill --no-verify-jwt
 ```
 
 L'applicazione sarà disponibile su http://localhost:3000.
+
+### 5. Pubblicazione della Edge Function su Supabase
+
+Per utilizzare l'applicazione con la funzione deployata su Supabase Cloud:
+
+```bash
+# Accedi all'account Supabase (se non l'hai già fatto)
+supabase login
+
+# Collega il progetto locale al tuo progetto Supabase
+supabase link --project-ref tua-project-ref
+
+# Configura la chiave API OpenAI nel cloud
+supabase secrets set OPENAI_API_KEY=sk-tuaChiaveOpenAI
+
+# Pubblica la funzione sul cloud Supabase
+supabase functions deploy analyzeSkill --no-verify-jwt
+```
+
+Una volta deployata, la funzione sarà disponibile all'URL: 
+`https://tuo-progetto.supabase.co/functions/v1/analyzeSkill`
+
+> **Nota**: Modifica il file `.env` per utilizzare l'URL della funzione deployata:
+> ```
+> NUXT_PUBLIC_API_URL=https://tuo-progetto.supabase.co
+> ```
 
 ## Personalizzazione delle Preferenze Aziendali
 
@@ -100,21 +123,53 @@ const baseSkills = ["comunicazione", "problem solving", "lavoro di squadra", "pe
 
 ## Deployment in Produzione
 
-### 1. Pubblicazione della Edge Function
+### 1. Preparazione del progetto Supabase
+
+Prima di procedere con il deployment in produzione, assicurati di:
+
+1. Avere un progetto Supabase attivo
+2. Aver configurato la chiave API OpenAI nelle variabili d'ambiente
+3. Avere i permessi necessari per il deployment delle functions
+
+### 2. Pubblicazione della Edge Function
 
 ```bash
-cd ms-supabase
+# Accedi a Supabase CLI (se non l'hai già fatto)
+supabase login
+
+# Collega il progetto locale al tuo progetto Supabase
+supabase link --project-ref tua-project-ref
+
+# Pubblica la Edge Function
 supabase functions deploy analyzeSkill --no-verify-jwt
 ```
 
-### 2. Compilazione e pubblicazione del frontend
+> **Nota**: Usa il flag `--no-verify-jwt` per permettere alle funzioni di essere chiamate senza autenticazione. In un ambiente di produzione, valuta se richiedere l'autenticazione per maggiore sicurezza.
+
+### 3. Verifica del deployment
+
+Puoi verificare che la function sia stata correttamente deployata usando:
 
 ```bash
+supabase functions list
+
+# Testa la funzione con un payload di esempio
+curl -X POST https://tuo-progetto.supabase.co/functions/v1/analyzeSkill \
+  -H "Content-Type: application/json" \
+  -d '{"ingredients":["JavaScript", "Python"], "preferences":[...]}'
+```
+
+### 4. Compilazione e pubblicazione del frontend
+
+```bash
+# Configura l'URL corretto nel file .env
+echo "NUXT_PUBLIC_API_URL=https://tuo-progetto.supabase.co" > .env
+
 # Compila l'applicazione
 npm run build
 
 # Pubblica la cartella generata
-# (dipende dal tuo provider di hosting)
+# La cartella .output/public può essere pubblicata su servizi come Vercel, Netlify, ecc.
 ```
 
 ## Estensione per Altri Casi d'Uso

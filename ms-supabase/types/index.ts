@@ -9,8 +9,6 @@ export interface Skill {
   vegetarian?: string;
 }
 
-// Alias per retrocompatibilità
-export type Ingredient = Skill;
 
 export interface Preference {
   category: string;
@@ -28,15 +26,6 @@ export interface ClassificationResult {
   };
 }
 
-// Per retrocompatibilità
-export interface NutritionAnalysisResult {
-  categorizedIngredients: {
-    sensibili: string[];
-    consigliati: string[];
-    sconsigliati: string[];
-    tollerati: string[];
-  };
-}
 
 // Preferenze di esempio per il testing
 export const samplePreferences: Preference[] = [
