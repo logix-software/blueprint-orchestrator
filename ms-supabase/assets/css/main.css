@@ -1,0 +1,119 @@
+:root {
+  --primary-color: #4a6fa5;
+  --secondary-color: #5495c9;
+  --accent-color: #8ac1f7;
+  --warning-color: #e8846b;
+  --success-color: #7fc87f;
+  --text-color: #333;
+  --light-bg: #f9f9f9;
+  --border-color: #ddd;
+  --border-radius: 8px;
+  --box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  color: var(--text-color);
+  background-color: var(--light-bg);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.card {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.btn {
+  display: inline-block;
+  padding: 10px 16px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: var(--secondary-color);
+}
+
+.btn.success {
+  background-color: var(--success-color);
+}
+
+.btn.warning {
+  background-color: var(--warning-color);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 16px;
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  color: white;
+  margin-right: 6px;
+  margin-bottom: 6px;
+}
+
+.badge.sensibili {
+  background-color: var(--warning-color);
+}
+
+.badge.consigliati {
+  background-color: var(--success-color);
+}
+
+.badge.sconsigliati {
+  background-color: var(--secondary-color);
+}
+
+.badge.tollerati {
+  background-color: #a0a0a0;
+}
+
+.error-message {
+  color: var(--warning-color);
+  font-size: 14px;
+  margin-top: 4px;
+} 
