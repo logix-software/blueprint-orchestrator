@@ -41,7 +41,7 @@ L'analizzatore classifica le skill in quattro categorie:
 
 ```bash
 # Clona il repository
-git clone https://github.com/tuo-username/blueprint-orchestrator.git
+git clone https://github.com/logix-software/blueprint-orchestrator.git
 cd blueprint-orchestrator/ms-supabase
 
 # Installa le dipendenze
