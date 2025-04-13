@@ -13,7 +13,6 @@ type HydrationStrategies = {
 type LazyComponent<T> = (T & DefineComponent<HydrationStrategies, {}, {}, {}, {}, {}, {}, { hydrated: () => void }>)
 interface _GlobalComponents {
       'AnalysisResult': typeof import("../components/AnalysisResult.vue")['default']
-    'IngredientForm': typeof import("../components/IngredientForm.vue")['default']
     'PreferencesList': typeof import("../components/PreferencesList.vue")['default']
     'SkillForm': typeof import("../components/SkillForm.vue")['default']
     'NuxtWelcome': typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -40,7 +39,6 @@ interface _GlobalComponents {
     'NuxtIsland': typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
     'NuxtRouteAnnouncer': IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
       'LazyAnalysisResult': LazyComponent<typeof import("../components/AnalysisResult.vue")['default']>
-    'LazyIngredientForm': LazyComponent<typeof import("../components/IngredientForm.vue")['default']>
     'LazyPreferencesList': LazyComponent<typeof import("../components/PreferencesList.vue")['default']>
     'LazySkillForm': LazyComponent<typeof import("../components/SkillForm.vue")['default']>
     'LazyNuxtWelcome': LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>
@@ -73,7 +71,6 @@ declare module 'vue' {
 }
 
 export const AnalysisResult: typeof import("../components/AnalysisResult.vue")['default']
-export const IngredientForm: typeof import("../components/IngredientForm.vue")['default']
 export const PreferencesList: typeof import("../components/PreferencesList.vue")['default']
 export const SkillForm: typeof import("../components/SkillForm.vue")['default']
 export const NuxtWelcome: typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']
@@ -100,7 +97,6 @@ export const Body: typeof import("../node_modules/nuxt/dist/head/runtime/compone
 export const NuxtIsland: typeof import("../node_modules/nuxt/dist/app/components/nuxt-island")['default']
 export const NuxtRouteAnnouncer: IslandComponent<typeof import("../node_modules/nuxt/dist/app/components/server-placeholder")['default']>
 export const LazyAnalysisResult: LazyComponent<typeof import("../components/AnalysisResult.vue")['default']>
-export const LazyIngredientForm: LazyComponent<typeof import("../components/IngredientForm.vue")['default']>
 export const LazyPreferencesList: LazyComponent<typeof import("../components/PreferencesList.vue")['default']>
 export const LazySkillForm: LazyComponent<typeof import("../components/SkillForm.vue")['default']>
 export const LazyNuxtWelcome: LazyComponent<typeof import("../node_modules/nuxt/dist/app/components/welcome.vue")['default']>

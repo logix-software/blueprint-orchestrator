@@ -201,4 +201,47 @@ Questo progetto utilizza l'API di OpenAI, che comporta costi in base all'utilizz
 
 ## Licenza
 
-[MIT](LICENSE) 
+[MIT](LICENSE)
+
+## Utilizzo dell'API
+
+La Edge Function `analyzeSkill` accetta richieste POST con un payload JSON nel seguente formato:
+
+```json
+{
+  "skills": [
+    {"text": "JavaScript"},
+    {"text": "Leadership"},
+    {"text": "Docker"}
+  ],
+  "preferences": [
+    {
+      "category": "Essenziali",
+      "sub_category": "Linguaggi di Programmazione",
+      "items": ["JavaScript", "TypeScript"]
+    },
+    {
+      "category": "Avanzate",
+      "sub_category": "DevOps",
+      "items": ["Docker", "Kubernetes"]
+    }
+  ]
+}
+```
+
+I parametri accettati sono:
+- `skills`: Array di oggetti con proprietà `text` contenente le competenze da analizzare
+- `preferences`: Array di oggetti di preferenza che definiscono le categorie per classificare le skill
+
+La risposta sarà un oggetto JSON con le skill categorizzate:
+
+```json
+{
+  "categorizedSkills": {
+    "essenziali": ["JavaScript"],
+    "avanzate": ["Docker"],
+    "trasversali": ["Leadership"],
+    "emergenti": []
+  }
+}
+``` 

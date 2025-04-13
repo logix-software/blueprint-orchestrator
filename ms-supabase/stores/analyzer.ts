@@ -33,7 +33,7 @@ export const useAnalyzerStore = defineStore('analyzer', {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            ingredients: this.skills,
+            skills: this.skills,
             preferences: this.preferences,
           }),
         });

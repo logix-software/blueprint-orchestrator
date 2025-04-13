@@ -16,7 +16,7 @@ serve(async (req: Request) => {
   try {
     // Leggo i dati JSON dal corpo della richiesta
     const body = await req.json();
-    const { ingredients: skills, preferences } = body;
+    const { skills, preferences } = body;
     
     // Verifico che siano state fornite skill e preferenze
     if (!skills || !Array.isArray(skills) || skills.length === 0) {
