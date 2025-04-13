@@ -1,0 +1,1 @@
+export { default } from "file:///Users/logixapple_2/Progetti/blueprint-orchestrator/node_modules/@nuxt/vite-builder/dist/runtime/vite-node.mjs"
