@@ -1,13 +1,17 @@
 <template>
-  <div class="form-section">
-    <h2 class="section-title">Inserisci le skill</h2>
-    <div class="form-group">
-      <label for="skills">Inserisci le skill professionali separate da virgole</label>
-      <div class="input-wrapper">
+  <div class="form-container">
+    <div class="form-header">
+      <h2 class="form-title">Analisi Competenze</h2>
+      <p class="form-subtitle">Inserisci le competenze professionali da analizzare</p>
+    </div>
+
+    <div class="input-container">
+      <label for="skills">Competenze (separate da virgole)</label>
+      <div class="textarea-wrapper">
         <textarea 
           id="skills"
           v-model="store.rawSkills"
-          placeholder="Esempio: JavaScript, Leadership, Docker, Python, Comunicazione efficace, Machine Learning"
+          placeholder="Es: JavaScript, Leadership, Cloud Computing, Machine Learning, Comunicazione efficace..."
           @input="store.parseSkills()"
           rows="4"
         ></textarea>
@@ -19,31 +23,36 @@
       {{ store.error }}
     </div>
 
-    <div v-if="store.skills.length > 0" class="skills-preview">
-      <h3>Anteprima skill ({{ store.skills.length }})</h3>
-      <div class="skills-list">
+    <div v-if="store.skills.length > 0" class="preview-container">
+      <div class="preview-header">
+        <h3>
+          <i class="fas fa-tags"></i>
+          Competenze rilevate ({{ store.skills.length }})
+        </h3>
+      </div>
+      <div class="skills-preview">
         <div 
           v-for="(skill, index) in store.skills" 
           :key="index"
           class="skill-tag"
         >
           {{ skill.text }}
-          <span class="remove-skill" @click="removeSkill(index)">×</span>
+          <span class="remove-tag" @click="removeSkill(index)">×</span>
         </div>
       </div>
     </div>
 
-    <div class="form-actions">
+    <div class="actions-container">
       <button 
         type="button" 
         class="btn primary-btn" 
         @click="analyze"
         :disabled="!canAnalyze"
       >
-        <span v-if="!store.isLoading">Analizza</span>
-        <span v-else>
-          <i class="fas fa-spinner fa-spin"></i> Analisi in corso...
-        </span>
+        <i class="fas fa-chart-pie" v-if="!store.isLoading"></i>
+        <i class="fas fa-spinner fa-spin" v-else></i>
+        <span v-if="!store.isLoading">Analizza competenze</span>
+        <span v-else>Analisi in corso...</span>
       </button>
       
       <button 
@@ -51,6 +60,7 @@
         class="btn secondary-btn" 
         @click="store.resetAll()"
       >
+        <i class="fas fa-trash-alt"></i>
         Pulisci
       </button>
     </div>
@@ -79,132 +89,152 @@ function removeSkill(index: number) {
 </script>
 
 <style scoped>
-.section-title {
-  text-align: center;
-  color: var(--primary-color);
-  margin-bottom: 25px;
-  font-size: 1.8rem;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  text-align: center;
-}
-
-.input-wrapper {
-  max-width: 700px;
-  width: 100%;
+.form-container {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--border-color);
+  padding: var(--spacing-xl);
+  box-shadow: var(--box-shadow);
+  max-width: 800px;
   margin: 0 auto;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: var(--spacing-lg);
+}
+
+.form-title {
+  margin: 0 0 var(--spacing-xs);
+  color: var(--primary-color);
+  font-size: 24px;
+}
+
+.form-subtitle {
+  margin: 0;
+  color: var(--text-color-light);
+  font-size: 16px;
+}
+
+.input-container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.input-container label {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-weight: 500;
+  color: var(--text-color);
+}
+
+.textarea-wrapper {
+  position: relative;
 }
 
 textarea {
   width: 100%;
-  padding: 15px;
+  padding: var(--spacing-md);
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-radius: var(--border-radius);
+  background-color: var(--secondary-background);
   font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s;
   resize: vertical;
   min-height: 120px;
-  background-color: #f9f9f9;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 textarea:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.2);
+  box-shadow: 0 0 0 2px rgba(var(--primary-color-rgb), 0.1);
+}
+
+.preview-container {
+  background-color: var(--secondary-background);
+  border-radius: var(--border-radius);
+  margin-bottom: var(--spacing-lg);
+  overflow: hidden;
+}
+
+.preview-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.preview-header h3 {
+  margin: 0;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+}
+
+.preview-header h3 i {
+  margin-right: var(--spacing-sm);
+  color: var(--primary-color);
 }
 
 .skills-preview {
-  margin: 25px auto;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 10px;
-  max-width: 700px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-.skills-preview h3 {
-  text-align: center;
-  margin-bottom: 15px;
-  font-size: 1.2rem;
-  color: #555;
-}
-
-.skills-list {
+  padding: var(--spacing-md);
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
-  justify-content: center;
+  gap: var(--spacing-sm);
 }
 
 .skill-tag {
-  background-color: white;
-  border: 1px solid var(--border-color);
-  border-radius: 20px;
-  padding: 6px 12px;
-  font-size: 14px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition: all 0.2s ease;
+  background-color: var(--background-color);
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 14px;
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-fast);
 }
 
 .skill-tag:hover {
-  background-color: #f0f8ff;
+  background-color: var(--primary-color-light);
   border-color: var(--primary-color);
 }
 
-.remove-skill {
-  margin-left: 6px;
-  color: #999;
-  font-weight: bold;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
-}
-
-.remove-skill:hover {
-  color: #ff5252;
-}
-
-.error-message {
-  padding: 12px;
-  background-color: #ffebee;
-  color: #d32f2f;
-  border-radius: 4px;
-  margin: 15px auto;
-  max-width: 700px;
-  display: flex;
+.remove-tag {
+  margin-left: 8px;
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity var(--transition-fast);
 }
 
-.error-message i {
-  margin-right: 8px;
+.remove-tag:hover {
+  opacity: 1;
+  color: var(--error-color);
 }
 
-.form-actions {
+.actions-container {
   display: flex;
-  gap: 10px;
-  margin-top: 25px;
+  gap: var(--spacing-md);
   justify-content: center;
 }
 
 .btn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 18px;
+  border-radius: var(--border-radius);
+  font-size: 15px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all var(--transition-fast);
+  border: none;
+}
+
+.btn i {
+  margin-right: 8px;
+  font-size: 16px;
 }
 
 .primary-btn {
@@ -215,21 +245,35 @@ textarea:focus {
 .primary-btn:hover:not(:disabled) {
   background-color: var(--primary-color-dark);
   transform: translateY(-1px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .primary-btn:disabled {
-  background-color: #ccc;
+  background-color: #bdbdbd;
   cursor: not-allowed;
 }
 
 .secondary-btn {
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--secondary-background);
+  color: var(--text-color);
   border: 1px solid var(--border-color);
 }
 
 .secondary-btn:hover {
-  background-color: #e5e5e5;
+  background-color: #f0f0f0;
+}
+
+@media (max-width: 768px) {
+  .form-container {
+    padding: var(--spacing-md);
+  }
+  
+  .actions-container {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
 </style> 

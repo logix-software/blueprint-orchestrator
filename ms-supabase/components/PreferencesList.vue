@@ -1,27 +1,28 @@
 <template>
-  <div class="preferences-section">
-    <h2 class="section-title">Preferenze Aziendali</h2>
-    <p class="section-description">
-      Queste sono le competenze ricercate dall'azienda per categorizzare le skill dei candidati.
-    </p>
+  <div class="preferences-container">
+    <div class="preferences-header">
+      <h2 class="preferences-title">Preferenze Aziendali</h2>
+      <p class="preferences-subtitle">Categorie utilizzate per classificare le competenze</p>
+    </div>
 
     <div class="preferences-list">
       <div 
         v-for="(preference, index) in store.preferences" 
         :key="index"
-        class="preference-category"
+        class="preference-card"
         :class="getCategoryClass(preference.category)"
       >
-        <div class="category-header">
-          <div class="category-icon">
+        <div class="preference-header">
+          <div class="preference-icon">
             <i :class="getCategoryIcon(preference.category)"></i>
           </div>
-          <div class="category-info">
-            <h3 class="category-title">{{ preference.category }}</h3>
-            <p class="category-subtitle">{{ preference.sub_category }}</p>
+          <div class="preference-info">
+            <h3>{{ preference.category }}</h3>
+            <p>{{ preference.sub_category }}</p>
           </div>
         </div>
-        <ul class="category-items">
+        
+        <ul class="preference-items">
           <li v-for="(item, itemIndex) in preference.items" :key="itemIndex">
             {{ item }}
           </li>
@@ -60,119 +61,147 @@ function getCategoryIcon(category: string): string {
 </script>
 
 <style scoped>
-.preferences-section {
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+.preferences-container {
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-.section-title {
+.preferences-header {
   text-align: center;
-  color: var(--primary-color);
-  margin-bottom: 12px;
-  font-size: 1.5rem;
+  margin-bottom: var(--spacing-md);
 }
 
-.section-description {
-  text-align: center;
-  color: #666;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
+.preferences-title {
+  margin: 0 0 var(--spacing-xs);
+  color: var(--text-color);
+  font-size: 20px;
+}
+
+.preferences-subtitle {
+  margin: 0;
+  color: var(--text-color-light);
+  font-size: 14px;
 }
 
 .preferences-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: var(--spacing-md);
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
-.preference-category {
-  background-color: white;
-  border-radius: 8px;
+.preference-card {
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
   overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.category-header {
+.preference-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--box-shadow-elevated);
+}
+
+.preference-header {
   display: flex;
   align-items: center;
-  padding: 12px 15px;
-  color: white;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
 }
 
-.essential .category-header {
-  background-color: #4a90e2;
-}
-
-.advanced .category-header {
-  background-color: #9b59b6;
-}
-
-.transversal .category-header {
-  background-color: #2ecc71;
-}
-
-.emerging .category-header {
-  background-color: #f39c12;
-}
-
-.category-icon {
-  width: 30px;
-  height: 30px;
+.preference-icon {
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.2);
   border-radius: 50%;
-  margin-right: 12px;
-  flex-shrink: 0;
+  margin-right: var(--spacing-md);
+  font-size: 16px;
 }
 
-.category-info {
+.essential .preference-icon {
+  background-color: rgba(var(--primary-color-rgb), 0.1);
+  color: var(--primary-color);
+}
+
+.advanced .preference-icon {
+  background-color: rgba(155, 89, 182, 0.1);
+  color: #9b59b6;
+}
+
+.transversal .preference-icon {
+  background-color: rgba(46, 204, 113, 0.1);
+  color: #2ecc71;
+}
+
+.emerging .preference-icon {
+  background-color: rgba(243, 156, 18, 0.1);
+  color: #f39c12;
+}
+
+.preference-info {
   flex-grow: 1;
 }
 
-.category-title {
-  font-size: 1.1rem;
+.preference-info h3 {
+  margin: 0;
+  font-size: 16px;
   font-weight: 600;
+}
+
+.preference-info p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-color-light);
+}
+
+.preference-items {
+  list-style: none;
+  padding: var(--spacing-sm) var(--spacing-md);
   margin: 0;
 }
 
-.category-subtitle {
-  font-size: 0.8rem;
-  margin: 0;
-  opacity: 0.9;
-}
-
-.category-items {
-  list-style-type: none;
-  padding: 12px 15px;
-  margin: 0;
-}
-
-.category-items li {
-  padding: 6px 0;
-  font-size: 0.9rem;
-  border-bottom: 1px solid #f0f0f0;
+.preference-items li {
+  padding: var(--spacing-xs) 0;
+  font-size: 14px;
   display: flex;
   align-items: center;
+  color: var(--text-color);
 }
 
-.category-items li:last-child {
-  border-bottom: none;
+.preference-items li::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-right: var(--spacing-sm);
 }
 
-.category-items li::before {
-  content: "•";
-  color: #999;
-  margin-right: 8px;
+.essential .preference-items li::before {
+  background-color: var(--primary-color);
+}
+
+.advanced .preference-items li::before {
+  background-color: #9b59b6;
+}
+
+.transversal .preference-items li::before {
+  background-color: #2ecc71;
+}
+
+.emerging .preference-items li::before {
+  background-color: #f39c12;
 }
 
 @media (max-width: 768px) {
-  .preferences-section {
-    margin-bottom: 20px;
+  .preferences-container {
+    margin-bottom: var(--spacing-lg);
   }
 }
 </style> 
