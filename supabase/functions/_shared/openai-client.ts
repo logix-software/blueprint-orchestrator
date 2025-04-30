@@ -40,7 +40,7 @@ export class OpenAIClient {
   /**
    * Crea un chat completion con OpenAI
    */
-  public async createChatCompletion(messages: any[]): Promise<any> {
+  public async createChatCompletion(messages: any[], options?: { response_format?: { type: string } }): Promise<any> {
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -52,7 +52,8 @@ export class OpenAIClient {
           model: this.model,
           messages,
           temperature: this.temperature,
-          max_tokens: this.maxTokens
+          max_tokens: this.maxTokens,
+          ...(options?.response_format && { response_format: options.response_format })
         })
       });
 

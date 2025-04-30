@@ -1,13 +1,8 @@
-// Importo Cors e serve dalla libreria std di Deno
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { corsHeaders } from '../_shared/cors.ts';
 import { Orchestrator } from '../_shared/orchestrator.ts';
-import type { Skill, Preference } from '../_shared/classificator-agent.ts';
+import type { Preference, ClassificationResult } from '../_shared/classificator-agent.ts';
 
-// Lista di skill di base sempre considerate essenziali
-const baseSkills = ["comunicazione", "problem solving", "lavoro di squadra", "pensiero critico"];
-
-// Handler principale della Edge Function
 serve(async (req: Request) => {
   // Gestisco la preflighted request per CORS
   if (req.method === 'OPTIONS') {
@@ -17,12 +12,12 @@ serve(async (req: Request) => {
   try {
     // Leggo i dati JSON dal corpo della richiesta
     const body = await req.json();
-    const { skills, preferences, baseSkills } = body;
+    const { classificationResult, preferences } = body;
     
     // Verifico che siano stati forniti i dati necessari
-    if (!skills || !Array.isArray(skills) || skills.length === 0) {
+    if (!classificationResult || !classificationResult.categorizedSkills) {
       return new Response(
-        JSON.stringify({ error: "Skills non valide o mancanti" }),
+        JSON.stringify({ error: "Risultato della classificazione non valido o mancante" }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 400 }
       );
     }
@@ -37,12 +32,11 @@ serve(async (req: Request) => {
     // Creo istanza dell'orchestratore
     const orchestrator = new Orchestrator();
     
-    // Analizzo le skill
-    console.log("Avvio analisi delle skill...");
-    const result = await orchestrator.analyzeSkill(
-      skills,
-      preferences,
-      baseSkills || []
+    // Analizzo il profilo
+    console.log("Avvio analisi del profilo...");
+    const result = await orchestrator.analyzeProfile(
+      classificationResult,
+      preferences
     );
     
     // Restituisco il risultato dell'analisi

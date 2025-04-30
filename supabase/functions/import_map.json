@@ -1,0 +1,12 @@
+{
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2.39.0",
+    "openai": "https://esm.sh/openai@4.20.1",
+    "cors": "https://deno.land/x/cors@v1.2.2/mod.ts",
+    "std/": "https://deno.land/std@0.168.0/",
+    "std/http/": "https://deno.land/std@0.168.0/http/",
+    "./_shared/cors.ts": "./_shared/cors.ts",
+    "./_shared/openai-client.ts": "./_shared/openai-client.ts",
+    "./_shared/translator-agent.ts": "./_shared/translator-agent.ts"
+  }
+} 

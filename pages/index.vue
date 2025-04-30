@@ -12,6 +12,7 @@
         <div class="main-column">
           <SkillForm />
           <AnalysisResult />
+          <ProfileAnalysis />
         </div>
         <div class="side-column">
           <PreferencesList />
@@ -20,7 +21,7 @@
     </main>
 
     <footer class="app-footer">
-      <p>Creato per testare la funzione Supabase Edge Function <code>analyzeSkill</code></p>
+      <p>Creato per testare le funzioni Supabase Edge Function <code>analyzeSkill</code> e <code>analyzeProfile</code></p>
     </footer>
   </div>
 </template>
@@ -30,6 +31,7 @@ import { useHead } from '#app';
 import SkillForm from '~/components/SkillForm.vue';
 import AnalysisResult from '~/components/AnalysisResult.vue';
 import PreferencesList from '~/components/PreferencesList.vue';
+import ProfileAnalysis from '~/components/ProfileAnalysis.vue';
 
 useHead({
   title: 'Analizzatore Skill',

@@ -1,8 +1,9 @@
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
 import { OpenAIClient } from './openai-client.ts';
 
 // Definizione dell'interfaccia per le skill
 export interface Skill {
-  text?: string;
+  text: string;
   id?: string;
   rank?: number;
   percent_estimate?: number;
@@ -33,7 +34,7 @@ export class TranslatorAgent {
     if (apiKey) {
       this.openaiClient = new OpenAIClient({
         apiKey,
-        model: "gpt-4o",  // Utilizziamo GPT-4o per le migliori performance
+        model: "gpt-4",  // Utilizziamo GPT-4 per le migliori performance
         temperature: 0,   // Temperatura bassa per risposte più deterministiche
         maxTokens: 2000   // Limita i token di risposta per controllare i costi
       });
@@ -48,7 +49,7 @@ export class TranslatorAgent {
     
     this.openaiClient = new OpenAIClient({
       apiKey: envApiKey,
-      model: "gpt-4o",
+      model: "gpt-4",
       temperature: 0,
       maxTokens: 2000
     });
@@ -147,12 +148,10 @@ Rispondi SOLO con un oggetto JSON nel seguente formato:
 }`;
       
       // Invia la richiesta al modello
-      const messages = [
-        { role: "system" as const, content: systemPrompt },
-        { role: "user" as const, content: userPrompt }
-      ];
-      
-      const response = await this.openaiClient.createChatCompletion(messages, {
+      const response = await this.openaiClient.createChatCompletion([
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt }
+      ], {
         response_format: { type: "json_object" }
       });
       

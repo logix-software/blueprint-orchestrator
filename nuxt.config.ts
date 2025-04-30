@@ -11,6 +11,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiUrl: process.env.NUXT_PUBLIC_API_URL || 'http://localhost:54321',
+      supabaseAnonKey: process.env.NUXT_PUBLIC_SUPABASE_ANON_KEY
     }
   },
 

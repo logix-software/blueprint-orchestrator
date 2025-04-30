@@ -26,6 +26,11 @@ export interface ClassificationResult {
   };
 }
 
+export interface ProfileAnalysis {
+  descrizione: string;
+  pro: string[];
+  contro: string[];
+}
 
 // Preferenze di esempio per il testing
 export const samplePreferences: Preference[] = [
