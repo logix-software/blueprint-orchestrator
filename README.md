@@ -244,4 +244,220 @@ La risposta sarà un oggetto JSON con le skill categorizzate:
     "emergenti": []
   }
 }
+```
+
+## Architettura del Sistema
+
+Il sistema è composto da diversi agenti specializzati coordinati da un orchestratore centrale:
+
+### 1. Orchestratore (`Orchestrator`)
+L'orchestratore è il componente centrale che coordina tutti gli agenti specializzati. Gestisce il flusso di lavoro completo dall'input alla generazione del risultato finale.
+
+```typescript
+class Orchestrator {
+  private translatorAgent: TranslatorAgent;
+  private classificatorAgent: ClassificatorAgent;
+  private profileAnalyzerAgent: ProfileAnalyzerAgent;
+  private aggregatorAgent: AggregatorAgent;
+}
+```
+
+### 2. Pipeline di Analisi delle Skill
+
+#### 2.1 Traduzione (`TranslatorAgent`)
+- Converte le skill in italiano se necessario
+- Mantiene un mapping delle traduzioni per riferimento
+- Garantisce consistenza linguistica
+
+#### 2.2 Classificazione (`ClassificatorAgent`)
+- Categorizza le skill in:
+  - Essenziali
+  - Avanzate
+  - Trasversali
+  - Emergenti
+- Utilizza le preferenze del recruiter come riferimento
+- Considera le skill di base sempre come essenziali
+
+### 3. Pipeline di Analisi del Profilo
+
+#### 3.1 Analisi Parallela
+L'orchestratore implementa un approccio di analisi parallela per ottenere una valutazione più robusta e obiettiva:
+
+```typescript
+async analyzeProfile(
+  classificationResult: ClassificationResult,
+  preferences: Preference[]
+): Promise<ProfileAnalysis> {
+  // Crea 3 istanze parallele di analisi
+  const analysisPromises = Array(3).fill(null).map(() => 
+    this.profileAnalyzerAgent.analyzeProfile(classificationResult, preferences)
+  );
+  
+  // Attende il completamento di tutte le analisi
+  const analyses = await Promise.all(analysisPromises);
+  
+  // Aggrega i risultati
+  return await this.aggregatorAgent.aggregateAnalyses(analyses);
+}
+```
+
+#### 3.2 Agenti di Analisi del Profilo (`ProfileAnalyzerAgent`)
+Ogni agente di analisi del profilo:
+- Valuta il match tra competenze e preferenze
+- Analizza il bilanciamento tra competenze tecniche e soft skill
+- Identifica punti di forza e criticità
+- Genera una descrizione riassuntiva
+
+#### 3.3 Aggregazione dei Risultati (`AggregatorAgent`)
+L'aggregatore:
+- Combina le analisi parallele
+- Risolve eventuali discrepanze
+- Produce un'analisi finale consolidata
+- Garantisce consistenza e completezza
+
+### 4. Struttura dei Risultati
+
+#### 4.1 Risultato della Classificazione
+```typescript
+interface ClassificationResult {
+  categorizedSkills: {
+    essenziali: string[];
+    avanzate: string[];
+    trasversali: string[];
+    emergenti: string[];
+  };
+}
+```
+
+#### 4.2 Analisi del Profilo
+```typescript
+interface ProfileAnalysis {
+  descrizione: string;    // Descrizione riassuntiva del profilo
+  pro: string[];         // Punti di forza identificati
+  contro: string[];      // Criticità o aree di miglioramento
+}
+```
+
+## Utilizzo del Sistema
+
+### 1. Analisi delle Skill
+```typescript
+const orchestrator = new Orchestrator();
+const result = await orchestrator.analyzeSkill(
+  skills,           // Array di skill da analizzare
+  preferences,      // Preferenze del recruiter
+  baseSkills        // Skill considerate sempre essenziali
+);
+```
+
+### 2. Analisi del Profilo
+```typescript
+const profileAnalysis = await orchestrator.analyzeProfile(
+  classificationResult,  // Risultato della classificazione
+  preferences           // Preferenze del recruiter
+);
+```
+
+## Edge Functions Supabase
+
+Il sistema è implementato come Edge Functions su Supabase:
+
+### analyzeSkill
+```typescript
+serve(async (req: Request) => {
+  const { skills, preferences, baseSkills } = await req.json();
+  const orchestrator = new Orchestrator();
+  const result = await orchestrator.analyzeSkill(
+    skills,
+    preferences,
+    baseSkills
+  );
+  return new Response(JSON.stringify(result));
+});
+```
+
+### analyzeProfile
+```typescript
+serve(async (req: Request) => {
+  const { classificationResult, preferences } = await req.json();
+  const orchestrator = new Orchestrator();
+  const result = await orchestrator.analyzeProfile(
+    classificationResult,
+    preferences
+  );
+  return new Response(JSON.stringify(result));
+});
+```
+
+## Deployment
+
+### 1. Deploy delle Edge Functions
+```bash
+# Deploy senza autenticazione JWT
+supabase functions deploy analyzeSkill --no-verify-jwt
+supabase functions deploy analyzeProfile --no-verify-jwt
+```
+
+### 2. Configurazione Frontend
+```env
+NUXT_PUBLIC_API_URL=https://[PROJECT_ID].functions.supabase.co
+```
+
+## Best Practices
+
+1. **Robustezza**
+   - Analisi parallela per ridurre bias
+   - Aggregazione intelligente dei risultati
+   - Gestione degli errori a ogni livello
+
+2. **Scalabilità**
+   - Architettura modulare
+   - Agenti indipendenti e specializzati
+   - Facile aggiunta di nuovi agenti
+
+3. **Manutenibilità**
+   - Separazione delle responsabilità
+   - Interfacce ben definite
+   - Logging completo
+
+## Estensibilità
+
+Il sistema può essere esteso in vari modi:
+
+1. **Nuovi Agenti**
+   - Agenti per analisi specifiche di settore
+   - Agenti per valutazioni comparative
+   - Agenti per previsioni di crescita
+
+2. **Nuove Funzionalità**
+   - Analisi temporale dell'evoluzione delle skill
+   - Suggerimenti per percorsi di crescita
+   - Matching con posizioni aperte
+
+3. **Integrazioni**
+   - Sistemi di HR
+   - Piattaforme di e-learning
+   - Job boards
+
+## Monitoraggio e Manutenzione
+
+### Logging
+Il sistema implementa un logging dettagliato a ogni livello:
+```typescript
+console.log("Orchestrator: Inizializzando il processo di analisi");
+console.log("Orchestrator: Richiedendo la traduzione delle skill");
+console.log("Orchestrator: Richiedendo l'analisi delle skill");
+console.log("Orchestrator: Attendendo i risultati delle analisi parallele");
+console.log("Orchestrator: Aggregando i risultati delle analisi");
+```
+
+### Gestione degli Errori
+Ogni componente implementa una gestione degli errori robusta:
+```typescript
+try {
+  // Logica del componente
+} catch (error) {
+  console.error("Errore durante l'elaborazione:", error);
+  throw new Error("Descrizione dettagliata dell'errore");
+}
 ``` 
